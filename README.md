@@ -1,2 +1,2 @@
 # VideoProcessor
-Azure Durable Functions
+Azure Durable Functions - Learning course by Mark Heath
