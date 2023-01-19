@@ -25,8 +25,8 @@ public static class OrchestratorFunctions
         string withintroLocation = null;
         string approvalResult = null;
 
-        //try
-        //{
+        try
+        {
             var transcodeResults = await context.CallSubOrchestratorAsync<VideoFileInfo[]>(nameof(TranscodeVideoOrchestrator), videoLocation);
 
             transcodedLocation = transcodeResults.OrderByDescending(t => t.BitRate).First().Location;
@@ -55,19 +55,19 @@ public static class OrchestratorFunctions
             else
                 await context.CallActivityAsync("RejectVideo", withintroLocation);
 
-        //}
-        //catch(Exception ex)
-        //{
-        //    log.LogError($"Caught an error from an activity: {ex.Message}");
+        }
+        catch(Exception ex)
+        {
+            log.LogError($"Caught an error from an activity: {ex.Message}");
 
-        //    await context.CallActivityAsync("Cleanup", new List<string>{ transcodedLocation, thumbnailLocation, withintroLocation });
+            await context.CallActivityAsync("Cleanup", new List<string>{ transcodedLocation, thumbnailLocation, withintroLocation});
 
-        //    return new
-        //    {
-        //        Error = "Failed to process uploaded video.",
-        //        Message = ex.Message
-        //    };
-        //}
+            return new
+            {
+                Error = "Failed to process uploaded video.",
+                Message = ex.Message
+            };
+        }
 
         return new
         {
